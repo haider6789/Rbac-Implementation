@@ -15,6 +15,7 @@ app.use(express.json());
 
 app.use('/api/auth', require('./src/routes/authRoutes'));
 app.use('/api/roles', require('./src/routes/roleRoutes'));
+app.use('/api/products', require('./src/routes/productRoutes'));
 // A simple test route
 app.get('/', (req, res) => {
     res.send('RBAC System is Running!');

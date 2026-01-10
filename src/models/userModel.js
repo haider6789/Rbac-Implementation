@@ -5,16 +5,24 @@ const pool = new Pool({
 });
 
 const createTable = async () => {
-  const query = `
+  const userQuery = `
     CREATE TABLE IF NOT EXISTS users (
       username VARCHAR(50) PRIMARY KEY,
       password TEXT NOT NULL,
       role VARCHAR(20) NOT NULL CHECK (role IN ('admin', 'user'))
     );
   `;
+  const productsQuery = `
+    CREATE TABLE IF NOT EXISTS products (
+      product_id SERIAL PRIMARY KEY,
+      product_name VARCHAR(100) NOT NULL UNIQUE
+    );
+  `;
   try {
-    await pool.query(query);
-    console.log("Table created successfully!");
+    await pool.query(userQuery);
+    console.log("Users table created successfully!");
+    await pool.query(productsQuery);
+    console.log("Products table created successfully!");
   } catch (err) {
     console.error("Error creating table:", err.stack);
   }
