@@ -10,11 +10,12 @@ const authMiddleware = require('./src/middlewares/authMiddleware');
 
 
 dbConnection();
-// This allows your app to read JSON data sent in request bodies
+//read JSON data sent in req body aka translator
 app.use(express.json());
 
+
 app.use('/api/auth', require('./src/routes/authRoutes'));
-app.use('/api/roles', require('./src/routes/roleRoutes'));
+app.use('/api/users', require('./src/routes/roleRoutes'));
 app.use('/api/products', require('./src/routes/productRoutes'));
 // A simple test route
 app.get('/', (req, res) => {

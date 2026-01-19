@@ -1,30 +1,35 @@
 const express = require('express');
 const router = express.Router();
 const authMiddleware = require('../middlewares/authMiddleware');
-const roleMiddleware = require('../middlewares/roleMiddleware');
-const { changeUserRole, getAllUsers, getUserRole } = require('../controllers/roleController');
+const checkPermission = require('../middlewares/permissionMiddleware');
+const { updateUserRole, getAllUsers, getUserDetails, deleteUser } = require('../controllers/roleController');
 
-// Admin only route to change any user's role
 router.put(
-    '/change-role', 
-    authMiddleware, 
-    roleMiddleware('admin'), 
-    changeUserRole
+    '/',
+    authMiddleware,
+    checkPermission('manage_users'),
+    updateUserRole
 );
 
-// Admin only route to view all users
 router.get(
-    '/all-users', 
-    authMiddleware, 
-    roleMiddleware('admin'), 
+    '/',
+    authMiddleware,
+    checkPermission('manage_users'),
     getAllUsers
 );
 
-// Any authenticated user can view a specific user's role
 router.get(
-    '/user-role/:username', 
-    authMiddleware, 
-    getUserRole
+    '/:username',
+    authMiddleware,
+    checkPermission('manage_users'), // Assuming managing users implies viewing details
+    getUserDetails
+);
+
+router.delete(
+    '/:id',
+    authMiddleware,
+    checkPermission('delete_user'), // Scalable Route Definition as requested
+    deleteUser
 );
 
 module.exports = router;

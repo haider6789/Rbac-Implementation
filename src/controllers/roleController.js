@@ -1,20 +1,20 @@
 const pool = require('../models/userModel'); // Database pool
 
-const changeUserRole = async (req, res) => {
+const updateUserRole = async (req, res) => {
     try {
         const { username, newRole } = req.body;
 
-        // Validate role input
+        //validate role input
         const validRoles = ['admin', 'user'];
         if (!validRoles.includes(newRole)) {
-            return res.status(400).json({ 
-                error: `Invalid role. Must be one of: ${validRoles.join(', ')}` 
+            return res.status(400).json({
+                error: `Invalid role. Must be one of: ${validRoles.join(', ')}`
             });
         }
 
-        // Check if user exists
+        //check if user exists
         const userResult = await pool.query(
-            'SELECT * FROM users WHERE username = $1', 
+            'SELECT * FROM users WHERE username = $1',
             [username]
         );
 
@@ -22,14 +22,14 @@ const changeUserRole = async (req, res) => {
             return res.status(404).json({ error: 'User not found' });
         }
 
-        // Update user role
+        //update user role
         await pool.query(
             'UPDATE users SET role = $1 WHERE username = $2',
             [newRole, username]
         );
 
-        res.json({ 
-            message: `User ${username} role updated to ${newRole} successfully` 
+        res.json({
+            message: `User ${username} role updated to ${newRole} successfully`
         });
 
     } catch (error) {
@@ -48,11 +48,11 @@ const getAllUsers = async (req, res) => {
     }
 };
 
-const getUserRole = async (req, res) => {
+const getUserDetails = async (req, res) => {
     try {
         const { username } = req.params;
         const result = await pool.query(
-            'SELECT username, role FROM users WHERE username = $1', 
+            'SELECT username, role FROM users WHERE username = $1',
             [username]
         );
 
@@ -67,4 +67,18 @@ const getUserRole = async (req, res) => {
     }
 };
 
-module.exports = { changeUserRole, getAllUsers, getUserRole };
+const deleteUser = async (req, res) => {
+    try {
+        const { id } = req.params;
+        const result = await pool.query('DELETE FROM users WHERE id = $1 RETURNING *', [id]);
+
+        if (result.rows.length === 0) {
+            return res.status(404).json({ error: 'User not found' });
+        }
+        res.json({ message: 'User deleted successfully' });
+    } catch (error) {
+        res.status(500).json({ error: 'Failed to delete user' });
+    }
+};
+
+module.exports = { updateUserRole, getAllUsers, getUserDetails, deleteUser };

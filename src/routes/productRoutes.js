@@ -1,47 +1,49 @@
 const express = require('express');
 const router = express.Router();
 const authMiddleware = require('../middlewares/authMiddleware');
-const roleMiddleware = require('../middlewares/roleMiddleware');
-const { 
-    addProduct, 
-    updateProduct, 
-    deleteProduct, 
-    getAllProducts, 
-    getProductById 
+const checkPermission = require('../middlewares/permissionMiddleware');
+const {
+    addProduct,
+    updateProduct,
+    deleteProduct,
+    getAllProducts,
+    getProductById
 } = require('../controllers/productController');
 
-// Admin only routes
+//admin/manager routes (permission based)
 router.post(
-    '/add', 
-    authMiddleware, 
-    roleMiddleware('admin'), 
+    '/',
+    authMiddleware,
+    checkPermission('create_product'),
     addProduct
 );
 
 router.put(
-    '/:product_id', 
-    authMiddleware, 
-    roleMiddleware('admin'), 
+    '/:product_id',
+    authMiddleware,
+    checkPermission('update_product'),
     updateProduct
 );
 
 router.delete(
-    '/:product_id', 
-    authMiddleware, 
-    roleMiddleware('admin'), 
+    '/:product_id',
+    authMiddleware,
+    checkPermission('delete_product'),
     deleteProduct
 );
 
-// Public routes (authenticated users - both admin and user can view)
+//public routes (both admin and user can view-should be authenticated)
 router.get(
-    '/', 
-    authMiddleware, 
+    '/',
+    authMiddleware,
+    checkPermission('read_product'),
     getAllProducts
 );
 
 router.get(
-    '/:product_id', 
-    authMiddleware, 
+    '/:product_id',
+    authMiddleware,
+    checkPermission('read_product'),
     getProductById
 );
 

@@ -1,6 +1,6 @@
 const pool = require('../models/userModel'); // Database pool
 
-// Admin: Add a new product
+//admin: add a new product
 const addProduct = async (req, res) => {
     try {
         const { product_name } = req.body;
@@ -28,7 +28,7 @@ const addProduct = async (req, res) => {
     }
 };
 
-// Admin: Update a product
+//admin: update a product
 const updateProduct = async (req, res) => {
     try {
         const { product_id } = req.params;
@@ -67,7 +67,7 @@ const updateProduct = async (req, res) => {
     }
 };
 
-// Admin: Delete a product
+//admin: delete a product
 const deleteProduct = async (req, res) => {
     try {
         const { product_id } = req.params;
@@ -95,7 +95,7 @@ const deleteProduct = async (req, res) => {
     }
 };
 
-// User/Admin: View all products
+//user/admin: view all products
 const getAllProducts = async (req, res) => {
     try {
         const result = await pool.query('SELECT * FROM products ORDER BY product_id');
@@ -109,7 +109,7 @@ const getAllProducts = async (req, res) => {
     }
 };
 
-// User/Admin: View a specific product
+//user/admin: view a specific product
 const getProductById = async (req, res) => {
     try {
         const { product_id } = req.params;
