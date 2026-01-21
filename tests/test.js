@@ -1,6 +1,6 @@
 const http = require('http');
 
-// Helper to make requests
+// helper function to make api requests... hope it works
 function request(method, path, token, body) {
     return new Promise((resolve, reject) => {
         const options = {
@@ -33,9 +33,9 @@ function request(method, path, token, body) {
 }
 
 async function runTests() {
-    console.log('Starting Manual Verification...');
+    console.log('starting verification... fingers crossed');
 
-    // 1. Register Admin
+    // 1. registering the big boss (admin)
     console.log('\n--- Registering Admin ---');
     const adminReg = await request('POST', '/auth/register', null, {
         username: 'test_admin',
@@ -44,30 +44,30 @@ async function runTests() {
     });
     console.log('Admin Register:', adminReg.status, adminReg.body);
 
-    // 2. Login Admin
+    // 2. logging in as admin
     console.log('\n--- Logging in Admin ---');
     const adminLogin = await request('POST', '/auth/login', null, {
         username: 'test_admin',
         password: 'password123'
     });
     const adminToken = adminLogin.body.token;
-    console.log('Admin Token:', adminToken ? 'Received' : 'Failed');
+    console.log('admin token received?', adminToken ? 'heck yeah' : 'nope');
 
     if (!adminToken) return;
 
-    // 3. Admin: Create Product (Should Succeed)
+    // 3. admin trying to create stuff (should work)
     console.log('\n--- Admin: Create Product (Expected: 201) ---');
     const createProd = await request('POST', '/products', adminToken, {
         product_name: 'Admin Product'
     });
     console.log('Create Product:', createProd.status, createProd.body);
 
-    // 4. Admin: View Users (Should Succeed)
+    // 4. admin viewing users list
     console.log('\n--- Admin: View Users (Expected: 200) ---');
     const viewUsers = await request('GET', '/users', adminToken);
-    console.log('View Users:', viewUsers.status, Array.isArray(viewUsers.body.users) ? 'Success (List)' : viewUsers.body);
+    console.log('View Users:', viewUsers.status, Array.isArray(viewUsers.body.users) ? 'success (list)' : viewUsers.body);
 
-    // 5. Register Regular User
+    // 5. registering a normal user
     console.log('\n--- Registering User ---');
     const userReg = await request('POST', '/auth/register', null, {
         username: 'test_user',
@@ -76,33 +76,32 @@ async function runTests() {
     });
     console.log('User Register:', userReg.status, userReg.body);
 
-    // 6. Login User
+    // 6. logging in the user
     console.log('\n--- Logging in User ---');
     const userLogin = await request('POST', '/auth/login', null, {
         username: 'test_user',
         password: 'password123'
     });
     const userToken = userLogin.body.token;
-    console.log('User Token:', userToken ? 'Received' : 'Failed');
+    console.log('user token received?', userToken ? 'yep' : 'nah');
 
     if (!userToken) return;
 
-    // 7. User: Create Product (Should Fail - 403)
+    // 7. user trying to create product (should fail lol)
     console.log('\n--- User: Create Product (Expected: 403) ---');
     const userCreateProd = await request('POST', '/products', userToken, {
         product_name: 'User Product'
     });
     console.log('Create Product (User):', userCreateProd.status, userCreateProd.body);
 
-    // 8. User: Delete User (Should Fail - 403)
-    // First get a user ID to delete (test_user's own id or someone else)
-    // We can't view users as user usually, so we'll just try random ID
+    // 8. user trying to delete someone (access denied expected)
+    // first get a user ID to delete (test_user's own id or someone else)
+    // we can't view users as user usually, so we'll just try random ID
     console.log('\n--- User: Delete User (Expected: 403) ---');
     const deleteReq = await request('DELETE', '/users/1', userToken);
     console.log('Delete User (User):', deleteReq.status, deleteReq.body);
 
 }
 
-// Wait for server? We assume server is running. 
-// If not, this script fails.
+// waiting for server... assuming its running calling runTests
 runTests().catch(console.error);
