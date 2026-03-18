@@ -1,6 +1,8 @@
-const pool = require('../models/userModel');
+const pool = require('../config/dbConnection');
+const permissionMap = require('../utils/constants.js');
 
-const checkPermission = (permission) => {
+const checkPermission = (routeName) => {
+    const permission = permissionMap[routeName]
     return async (req, res, next) => {
         if (!req.user || !req.user.role_id) {
             return res.status(401).json({ error: 'User not authenticated or missing role' });

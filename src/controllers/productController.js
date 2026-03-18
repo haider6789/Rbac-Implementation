@@ -1,4 +1,4 @@
-const pool = require('../models/userModel'); // Database pool
+const pool = require('../config/dbConnection'); // Database pool
 
 //admin: add a new product
 const addProduct = async (req, res) => {

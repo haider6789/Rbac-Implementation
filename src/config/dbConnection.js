@@ -1,16 +1,8 @@
-const pg = require('pg');
+require('dotenv').config();
+const { Pool } = require('pg');
 
-const dbConnection = async () => {
+const pool = new Pool({
+    connectionString: process.env.DATABASE_URL || "postgres://postgres:root@localhost:5432/rbac_db",
+});
 
-    try {
-    const pool = new pg.Pool({
-        connectionString: process.env.DATABASE_URL,
-    });
-    console.log('Database connected successfully');
-}catch(error){
-    console.error('Database connection failed:', error);
-    process.exit(1);
-}
-}
-
-module.exports = dbConnection;
+module.exports = pool;

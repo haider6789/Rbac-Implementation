@@ -1,4 +1,4 @@
-const pool = require('../models/userModel');
+const pool = require('../config/dbConnection');
 const bcrypt = require('bcrypt');
 
 const seed = async () => {

@@ -1,15 +1,17 @@
 const express = require('express');
-const {pool} = require('pg');
-const dotenv = require('dotenv').config();
-const dbConnection = require('./src/config/dbConnection');
-const userModel = require('./src/models/userModel');    
+require('dotenv').config();
+const pool = require('./src/config/dbConnection');
 const app = express();
 const authRoutes = require('./src/routes/authRoutes');
 const authMiddleware = require('./src/middlewares/authMiddleware');
-//const PORT = 3000;
 
+// Test DB connection
+pool.query('SELECT NOW()').then(() => {
+    console.log('Database connected successfully');
+}).catch(err => {
+    console.error('Database connection failed:', err);
+});
 
-dbConnection();
 //read JSON data sent in req body aka translator
 app.use(express.json());
 

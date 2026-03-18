@@ -1,6 +1,6 @@
-const bcrypt = require('bcrypt'); // Fixed typo: 'bycrypt' -> 'bcrypt'
+const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
-const pool = require('../models/userModel');
+const pool = require('../config/dbConnection');
 
 const register = async (req, res) => {
     try {

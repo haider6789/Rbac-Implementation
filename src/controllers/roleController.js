@@ -1,16 +1,16 @@
-const pool = require('../models/userModel'); // Database pool
+const pool = require('../config/dbConnection'); // Database pool
 
 const updateUserRole = async (req, res) => {
     try {
         const { username, newRole } = req.body;
 
-        //validate role input
-        const validRoles = ['admin', 'user'];
-        if (!validRoles.includes(newRole)) {
-            return res.status(400).json({
-                error: `Invalid role. Must be one of: ${validRoles.join(', ')}`
-            });
+
+        //check if role exists in DB
+        const roleRes = await pool.query('SELECT id FROM roles WHERE name = $1', [newRole]);
+        if (roleRes.rows.length === 0) {
+            return res.status(400).json({ error: `Invalid role: ${newRole}` });
         }
+        const newRoleId = roleRes.rows[0].id;
 
         //check if user exists
         const userResult = await pool.query(
@@ -40,7 +40,11 @@ const updateUserRole = async (req, res) => {
 
 const getAllUsers = async (req, res) => {
     try {
-        const result = await pool.query('SELECT username, role FROM users');
+        const result = await pool.query(`
+            SELECT u.id, u.username, r.name as role 
+            FROM users u 
+            LEFT JOIN roles r ON u.role_id = r.id
+        `);
         res.json({ users: result.rows });
     } catch (error) {
         console.error('Get users error:', error);

@@ -28,7 +28,7 @@ router.get(
 router.delete(
     '/:id',
     authMiddleware,
-    checkPermission('delete_user'), // Scalable Route Definition as requested
+    checkPermission('delete_user'), // Scalable 
     deleteUser
 );
 

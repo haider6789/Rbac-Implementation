@@ -14,21 +14,21 @@ const {
 router.post(
     '/',
     authMiddleware,
-    checkPermission('create_product'),
+    checkPermission('createProduct'),
     addProduct
 );
 
 router.put(
     '/:product_id',
     authMiddleware,
-    checkPermission('update_product'),
+    checkPermission('updateProduct'),
     updateProduct
 );
 
 router.delete(
     '/:product_id',
     authMiddleware,
-    checkPermission('delete_product'),
+    checkPermission('deleteProduct'),
     deleteProduct
 );
 
@@ -36,14 +36,14 @@ router.delete(
 router.get(
     '/',
     authMiddleware,
-    checkPermission('read_product'),
+    checkPermission('getAllProducts'),
     getAllProducts
 );
 
 router.get(
     '/:product_id',
     authMiddleware,
-    checkPermission('read_product'),
+    checkPermission('getProductById'),
     getProductById
 );
 
